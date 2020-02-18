@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mariadb-one:
+    image: mariadb:10.1
+    ports:
+      - '3306:3306'
+      - '4444:4444'
+      - '4567:4567'
+      - '4567:4567/udp'
+      - '4568:4568'
+    volumes:
+      - /opt/compose/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - /opt/compose/logs/:/opt/bitnami/mariadb/logs/
+      - /opt/compose/mysql.conf.d/:/etc/mysql/conf.d/
+      - /opt/compose/data/:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=P@ssw0rd
+    command: --wsrep-new-cluster --wsrep_node_address=192.168.3.2
+    network_mode: host
+
