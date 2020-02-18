@@ -2,6 +2,8 @@ version: '3'
 services:
   mariadb-1:
     image: mariadb:10.1
+    container_name: mariadb
+    hostname: db.lab2.jelastic.team
     cap_add:
       - NET_ADMIN
     ports:
@@ -20,8 +22,10 @@ services:
     command: --wsrep-new-cluster --wsrep_node_address=192.168.3.2
     network_mode: host
 
-  pdns-server-1:
+  pdns-server:
     image: psitrax/powerdns:v4.2.0
+    container_name: pdns-server
+    hostname: pdns.lab2.jelastic.team
     cap_add:
       - NET_ADMIN
     ports:
@@ -37,8 +41,10 @@ services:
     network_mode: host
 
   web1:
-    image: nginx
+    image: php:7.2-apache
+    container_name: webapp
+    hostname: webapp.lab2.jelastic.team
     ports:
       - '8080:80'
     volumes:
-          - /opt/compose/web/:/usr/share/nginx/html/
+          - /opt/compose/webcontent/:/var/www/html/
