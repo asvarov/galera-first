@@ -1,9 +1,9 @@
 version: '3'
 services:
-  mariadb-1:
+  mariadb:
     image: mariadb:10.1
-    container_name: mariadb
-    hostname: db.lab2.jelastic.team
+    container_name: db1
+    hostname: db1.lab2.jelastic.team
     cap_add:
       - NET_ADMIN
     ports:
@@ -24,8 +24,8 @@ services:
 
   pdns-server:
     image: psitrax/powerdns:v4.2.0
-    container_name: pdns-server
-    hostname: pdns.lab2.jelastic.team
+    container_name: pdns1
+    hostname: pdns1.lab2.jelastic.team
     cap_add:
       - NET_ADMIN
     ports:
@@ -37,13 +37,13 @@ services:
       - MYSQL_USER=imperituroard
       - MYSQL_PASS=imperituroard
     depends_on:
-      - mariadb-1
+      - mariadb
     network_mode: host
 
   web1:
     image: php:7.2-apache
-    container_name: webapp
-    hostname: webapp.lab2.jelastic.team
+    container_name: webapp1
+    hostname: webapp1.lab2.jelastic.team
     ports:
       - '8080:80'
     volumes:
