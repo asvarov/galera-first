@@ -1,0 +1,50 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.1
+    container_name: db1
+    hostname: db1.lab2.jelastic.team
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - '3306:3306'
+      - '4444:4444'
+      - '4567:4567'
+      - '4567:4567/udp'
+      - '4568:4568'
+    volumes:
+      - docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
+      - logs:/opt/bitnami/mariadb/logs/
+      - mysql.conf.d:/etc/mysql/conf.d/
+      - data:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=P@ssw0rd
+    command: --wsrep-new-cluster --wsrep_node_address=192.168.3.2
+    network_mode: host
+
+  pdns-server:
+    image: psitrax/powerdns:v4.2.0
+    container_name: pdns1
+    hostname: pdns1.lab2.jelastic.team
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    command: --api=yes --api-key=apykey
+    environment:
+      - MYSQL_HOST=192.168.3.2
+      - MYSQL_USER=imperituroard
+      - MYSQL_PASS=imperituroard
+    depends_on:
+      - mariadb
+    network_mode: host
+
+  web1:
+    image: php:7.2-apache
+    container_name: webapp1
+    hostname: webapp1.lab2.jelastic.team
+    ports:
+      - '8080:80'
+    volumes:
+          - webcontent:/var/www/html/
