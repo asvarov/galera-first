@@ -1,7 +1,11 @@
-CREATE DATABASE powerdns character set utf8;
-GRANT ALL ON powerdns.* TO 'imperituroard'@'localhost' IDENTIFIED BY 'imperituroard';
+CREATE DATABASE pdns character set utf8;
+CREATE USER 'imperituroard'@'localhost' IDENTIFIED BY 'imperituroard';
+CREATE USER 'imperituroard'@'%' IDENTIFIED BY 'imperituroard';
+GRANT ALL ON pdns.* TO 'imperituroard'@'localhost' IDENTIFIED BY 'imperituroard';
+GRANT ALL ON pdns.* TO 'imperituroard'@'%' IDENTIFIED BY 'imperituroard';
 FLUSH PRIVILEGES;
-USE powerdns;
+
+USE pdns;
 
 CREATE TABLE domains (
   id                    INT AUTO_INCREMENT,

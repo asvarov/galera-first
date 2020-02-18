@@ -1,8 +1,9 @@
 version: '3'
-
 services:
-  mariadb-one:
+  mariadb-1:
     image: mariadb:10.1
+    cap_add:
+      - NET_ADMIN
     ports:
       - '3306:3306'
       - '4444:4444'
@@ -19,3 +20,18 @@ services:
     command: --wsrep-new-cluster --wsrep_node_address=192.168.3.2
     network_mode: host
 
+  pdns-server-1:
+    image: psitrax/powerdns:v4.2.0
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    command: --api=yes --api-key=apykey --webserver-address=0.0.0.0 --webserver-allow-from=0.0.0.0/0
+    environment:
+      - MYSQL_HOST=192.168.3.2
+      - MYSQL_USER=imperituroard
+      - MYSQL_PASS=imperituroard
+    depends_on:
+      - mariadb-1
+    network_mode: host
